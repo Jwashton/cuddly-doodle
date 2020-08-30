@@ -3,15 +3,7 @@ defmodule Todo.DatabaseTest do
   alias Todo.Database
 
   setup do
-    # Two problems
-    #
-    # 1. This tries to start the Database process for each test. Can we use
-    #    `start_supervised(Database)` ?
-    # 2. Database.clear() removes the ./persist directory, so that folder doesn't
-    #    exist for the second test.
-    #    Maybe File.rm_rf!(Path.join(@db_folder, "*"))?
-    # start_supervised!(Database, start: {Database, :start, []})
-    Database.start()
+    start_supervised!(Database, start: {Database, :start, []})
 
     on_exit fn ->
       Database.clear()
