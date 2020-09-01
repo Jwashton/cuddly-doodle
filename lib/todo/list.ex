@@ -3,7 +3,7 @@ defmodule Todo.List do
 
   @type t :: %__MODULE__{}
 
-  @spec new(Enum.t) :: __MODULE__.t
+  @spec new(Enum.t()) :: __MODULE__.t()
   def new(entries \\ []) do
     Enum.reduce(
       entries,

@@ -1,8 +1,8 @@
 defmodule Todo.Cache do
   use GenServer
 
-  def start() do
-    GenServer.start(__MODULE__, nil)
+  def start(database \\ Todo.Database) do
+    GenServer.start(__MODULE__, database)
   end
 
   def server_process(cache_pid, todo_list_name) do
@@ -10,22 +10,23 @@ defmodule Todo.Cache do
   end
 
   @impl GenServer
-  def init(_) do
+  def init(database) do
     # Is this going to fail if we have start multiple caches?
-    Todo.Database.start()
-    {:ok, %{}}
+    database.start()
+    {:ok, {database, %{}}}
   end
 
   @impl GenServer
-  def handle_call({:server_process, todo_list_name}, _, todo_servers) do
+  def handle_call({:server_process, todo_list_name}, _, {database, todo_servers}) do
     case Map.fetch(todo_servers, todo_list_name) do
       {:ok, todo_server} ->
-        {:reply, todo_server, todo_servers}
+        {:reply, todo_server, {database, todo_servers}}
 
       :error ->
-        {:ok, new_server} = Todo.Server.start(todo_list_name)
+        {:ok, new_server} = Todo.Server.start(database, todo_list_name)
+        new_servers = Map.put(todo_servers, todo_list_name, new_server)
 
-        {:reply, new_server, Map.put(todo_servers, todo_list_name, new_server)}
+        {:reply, new_server, {database, new_servers}}
     end
   end
 end

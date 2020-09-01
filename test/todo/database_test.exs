@@ -5,9 +5,9 @@ defmodule Todo.DatabaseTest do
   setup do
     start_supervised!(Database, start: {Database, :start, []})
 
-    on_exit fn ->
+    on_exit(fn ->
       Database.clear()
-    end
+    end)
   end
 
   test "starting empty" do

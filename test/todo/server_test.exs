@@ -1,10 +1,14 @@
 defmodule Todo.ServerTest do
   use ExUnit.Case
 
+  defmodule MockDatabase do
+    def store(_key, _data), do: nil
+    def get(_key), do: nil
+  end
+
   setup do
-    start_supervised!(Todo.Database, start: {Todo.Database, :start, []})
     # {:ok, server} = start_supervised(Todo.Server, start: {Todo.Server, :start, ["alice"]})
-    {:ok, server} = Todo.Server.start("alice")
+    {:ok, server} = Todo.Server.start(MockDatabase, "alice")
 
     Todo.Server.add_entry(server, %{date: ~D[2018-12-19], title: "Dentist"})
     Todo.Server.add_entry(server, %{date: ~D[2018-12-20], title: "Shopping"})

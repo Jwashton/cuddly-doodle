@@ -1,8 +1,8 @@
 defmodule Todo.Server do
   use GenServer
 
-  def start(list_name) do
-    GenServer.start(__MODULE__, list_name)
+  def start(database, list_name) do
+    GenServer.start(__MODULE__, {database, list_name})
   end
 
   def add_entry(server, new_entry) do
@@ -22,38 +22,38 @@ defmodule Todo.Server do
   end
 
   @impl GenServer
-  def init(name) do
-    {:ok, nil, {:continue, name}}
+  def init({database, name}) do
+    {:ok, nil, {:continue, {database, name}}}
   end
 
   @impl GenServer
-  def handle_continue(name, _) do
-    {:noreply, {name, Todo.Database.get(name) || Todo.List.new()}}
+  def handle_continue({database, name}, _) do
+    {:noreply, {database, name, database.get(name) || Todo.List.new()}}
   end
 
   @impl GenServer
-  def handle_cast({:add_entry, new_entry}, {name, todo_list}) do
+  def handle_cast({:add_entry, new_entry}, {database, name, todo_list}) do
     new_list = Todo.List.add_entry(todo_list, new_entry)
-    Todo.Database.store(name, new_list)
-    {:noreply, {name, new_list}}
+    database.store(name, new_list)
+    {:noreply, {database, name, new_list}}
   end
 
   @impl GenServer
-  def handle_cast({:delete_entry, entry_id}, {name, todo_list}) do
+  def handle_cast({:delete_entry, entry_id}, {database, name, todo_list}) do
     new_list = Todo.List.delete_entry(todo_list, entry_id)
-    Todo.Database.store(name, new_list)
-    {:noreply, {name, new_list}}
+    database.store(name, new_list)
+    {:noreply, {database, name, new_list}}
   end
 
   @impl GenServer
-  def handle_cast({:update_entry, entry_id, entry_updater}, {name, todo_list}) do
+  def handle_cast({:update_entry, entry_id, entry_updater}, {database, name, todo_list}) do
     new_list = Todo.List.update_entry(todo_list, entry_id, entry_updater)
-    Todo.Database.store(name, new_list)
-    {:noreply, {name, new_list}}
+    database.store(name, new_list)
+    {:noreply, {database, name, new_list}}
   end
 
   @impl GenServer
-  def handle_call({:entries, date}, _from, {_name, todo_list}) do
-    {:reply, Todo.List.entries(todo_list, date), todo_list}
+  def handle_call({:entries, date}, _from, {database, name, todo_list}) do
+    {:reply, Todo.List.entries(todo_list, date), {database, name, todo_list}}
   end
 end

@@ -1,14 +1,15 @@
 defmodule Todo.CacheTest do
   use ExUnit.Case
-  
+
+  defmodule MockDatabase do
+    def start(), do: nil
+    def store(_key, _data), do: nil
+    def get(_key), do: nil
+  end
+
   setup do
-    {:ok, cache} = Todo.Cache.start()
-    
-    on_exit(fn ->
-      Todo.Database.clear()
-      GenServer.stop(Todo.Database)
-    end)
-    
+    {:ok, cache} = Todo.Cache.start(MockDatabase)
+
     %{cache: cache}
   end
 
