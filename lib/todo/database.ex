@@ -30,7 +30,6 @@ defmodule Todo.Database do
   def handle_cast({:store, key, data}, state) do
     file = file_name(key)
 
-    IO.inspect(File.ls!(@db_folder))
     File.write!(file, :erlang.term_to_binary(data))
 
     {:noreply, state}

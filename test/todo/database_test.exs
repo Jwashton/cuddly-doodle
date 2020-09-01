@@ -2,14 +2,8 @@ defmodule Todo.DatabaseTest do
   use ExUnit.Case
   alias Todo.Database
 
-  setup_all do
-    Database.start()
-
-    :ok
-  end
-
   setup do
-    # start_supervised!(Database, start: {Database, :start, []})
+    start_supervised!(Database, start: {Database, :start, []})
 
     on_exit fn ->
       Database.clear()

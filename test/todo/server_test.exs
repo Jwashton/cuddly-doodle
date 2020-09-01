@@ -1,13 +1,8 @@
 defmodule Todo.ServerTest do
   use ExUnit.Case
 
-  setup_all do
-    Todo.Database.start()
-
-    :ok
-  end
-
   setup do
+    start_supervised!(Todo.Database, start: {Todo.Database, :start, []})
     # {:ok, server} = start_supervised(Todo.Server, start: {Todo.Server, :start, ["alice"]})
     {:ok, server} = Todo.Server.start("alice")
 
