@@ -6,9 +6,10 @@ defmodule Todo.Database do
   def start() do
     GenServer.start(__MODULE__, nil, name: __MODULE__)
   end
-  
+
   def clear() do
     File.rm_rf!(@db_folder)
+    File.mkdir_p!(@db_folder)
   end
 
   def store(key, data) do
@@ -29,7 +30,8 @@ defmodule Todo.Database do
   def handle_cast({:store, key, data}, state) do
     file = file_name(key)
 
-    :ok = File.write(file, :erlang.term_to_binary(data))
+    IO.inspect(File.ls!(@db_folder))
+    File.write!(file, :erlang.term_to_binary(data))
 
     {:noreply, state}
   end

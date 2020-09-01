@@ -1,5 +1,5 @@
 defmodule Todo.CacheTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   test "general usage" do
     {:ok, cache} = Todo.Cache.start()

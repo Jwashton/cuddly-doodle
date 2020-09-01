@@ -1,12 +1,23 @@
 defmodule Todo.ServerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
+
+  setup_all do
+    Todo.Database.start()
+
+    :ok
+  end
 
   setup do
-    {:ok, server} = Todo.Server.start()
+    # {:ok, server} = start_supervised(Todo.Server, start: {Todo.Server, :start, ["alice"]})
+    {:ok, server} = Todo.Server.start("alice")
 
     Todo.Server.add_entry(server, %{date: ~D[2018-12-19], title: "Dentist"})
     Todo.Server.add_entry(server, %{date: ~D[2018-12-20], title: "Shopping"})
     Todo.Server.add_entry(server, %{date: ~D[2018-12-19], title: "Movies"})
+
+    on_exit(fn ->
+      Todo.Database.clear()
+    end)
 
     %{server: server}
   end
