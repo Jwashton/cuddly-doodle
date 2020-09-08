@@ -1,12 +1,16 @@
 defmodule Todo.Cache do
   use GenServer
 
-  def start(database \\ Todo.Database) do
-    GenServer.start(__MODULE__, database)
+  def start_link(database \\ Todo.Database) do
+    GenServer.start_link(__MODULE__, database, name: __MODULE__)
   end
 
-  def server_process(cache_pid, todo_list_name) do
-    GenServer.call(cache_pid, {:server_process, todo_list_name})
+  def server_process(todo_list_name) do
+    GenServer.call(__MODULE__, {:server_process, todo_list_name})
+  end
+
+  def flush() do
+    GenServer.call(__MODULE__, :flush)
   end
 
   @impl GenServer
@@ -28,5 +32,9 @@ defmodule Todo.Cache do
 
         {:reply, new_server, {database, new_servers}}
     end
+  end
+
+  def handle_call(:flush, _, {database, _todo_servers}) do
+    {:reply, :ok, {database, %{}}}
   end
 end
