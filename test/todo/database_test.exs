@@ -3,7 +3,7 @@ defmodule Todo.DatabaseTest do
   alias Todo.Database
 
   setup do
-    start_supervised!(Database, start: {Database, :start, []})
+    start_supervised!(Database)
 
     on_exit(fn ->
       Database.clear()

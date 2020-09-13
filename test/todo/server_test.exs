@@ -7,7 +7,7 @@ defmodule Todo.ServerTest do
   end
 
   setup do
-    {:ok, server} = start_supervised(Todo.Server, start: {Todo.Server, :start, [MockDatabase, "alice"]})
+    {:ok, server} = start_supervised(Todo.Server, start: {Todo.Server, :start_link, [MockDatabase, "alice"]})
 
     Todo.Server.add_entry(server, %{date: ~D[2018-12-19], title: "Dentist"})
     Todo.Server.add_entry(server, %{date: ~D[2018-12-20], title: "Shopping"})

@@ -13,6 +13,13 @@ defmodule Todo.Cache do
     GenServer.call(__MODULE__, :flush)
   end
 
+  def child_spec([]) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, []}
+    }
+  end
+
   @impl GenServer
   def init(database) do
     # Is this going to fail if we have start multiple caches?
@@ -27,7 +34,7 @@ defmodule Todo.Cache do
         {:reply, todo_server, {database, todo_servers}}
 
       :error ->
-        {:ok, new_server} = Todo.Server.start(database, todo_list_name)
+        {:ok, new_server} = Todo.Server.start_link(database, todo_list_name)
         new_servers = Map.put(todo_servers, todo_list_name, new_server)
 
         {:reply, new_server, {database, new_servers}}
