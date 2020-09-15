@@ -13,10 +13,6 @@ defmodule Todo.ServerTest do
     Todo.Server.add_entry(server, %{date: ~D[2018-12-20], title: "Shopping"})
     Todo.Server.add_entry(server, %{date: ~D[2018-12-19], title: "Movies"})
 
-    on_exit(fn ->
-      Todo.Database.clear()
-    end)
-
     %{server: server}
   end
 
