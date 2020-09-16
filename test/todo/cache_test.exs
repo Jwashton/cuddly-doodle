@@ -2,7 +2,7 @@ defmodule Todo.CacheTest do
   use ExUnit.Case
 
   defmodule MockDatabase do
-    def start(), do: nil
+    def start_link(_), do: nil
     def store(_key, _data), do: nil
     def get(_key), do: nil
   end
