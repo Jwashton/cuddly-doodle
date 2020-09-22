@@ -22,8 +22,6 @@ defmodule Todo.Cache do
 
   @impl GenServer
   def init(database) do
-    # Is this going to fail if we have start multiple caches?
-    database.start_link(nil)
     {:ok, {database, %{}}}
   end
 

@@ -6,7 +6,11 @@ defmodule Todo.System do
   end
 
   defp children() do
-    [Todo.Cache]
+    [
+      Todo.ProcessRegistry,
+      Todo.Database,
+      Todo.Cache
+    ]
   end
 
   @impl Supervisor
