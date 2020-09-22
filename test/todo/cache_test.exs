@@ -8,7 +8,8 @@ defmodule Todo.CacheTest do
   end
 
   setup_all do
-    {:ok, _} = Todo.Cache.start_link(MockDatabase)
+    start_supervised!(Todo.ProcessRegistry)
+    start_supervised!({Todo.Cache, MockDatabase})
 
     :ok
   end
