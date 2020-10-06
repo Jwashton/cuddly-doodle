@@ -9,7 +9,8 @@ defmodule Todo.System do
     [
       Todo.ProcessRegistry,
       Todo.Database,
-      Todo.Cache
+      Todo.Cache,
+      Todo.Web
     ]
   end
 
