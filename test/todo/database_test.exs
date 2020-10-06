@@ -3,9 +3,6 @@ defmodule Todo.DatabaseTest do
   alias Todo.Database
 
   setup do
-    start_supervised!(Todo.ProcessRegistry)
-    start_supervised!(Database)
-
     on_exit(fn ->
       Database.clear()
     end)

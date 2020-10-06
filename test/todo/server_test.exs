@@ -7,7 +7,6 @@ defmodule Todo.ServerTest do
   end
 
   setup do
-    start_supervised!(Todo.ProcessRegistry)
     {:ok, server} = start_supervised({Todo.Server, [MockDatabase, "alice"]})
 
     Todo.Server.add_entry(server, %{date: ~D[2018-12-19], title: "Dentist"})
